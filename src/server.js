@@ -101,7 +101,108 @@ app.use('/wp-json', paymentRoutes);
 app.use('/wp-json', couponRoutes);
 app.use('/wp-json', settingsRoutes);
 
-// Welcome route
+// API info route at /wp-json
+app.get('/wp-json', (req, res) => {
+    res.json({
+        message: 'E-Commerce API - Complete Backend Solution',
+        version: '1.0.0',
+        status: 'online',
+        documentation: 'See ROUTES.md for complete API documentation',
+        base_url: `${req.protocol}://${req.get('host')}/wp-json`,
+        endpoints: {
+            authentication: {
+                login: 'POST /wp-json/jwt-auth/v1/token',
+                register: 'POST /wp-json/tradebakerz/wc/v1/register',
+                validate: 'POST /wp-json/jwt-auth/v1/validate [Auth]',
+                refresh: 'POST /wp-json/jwt-auth/v1/token/refresh [Auth]',
+                logout: 'POST /wp-json/tradebakerz/wc/v1/auth/logout [Auth]',
+                me: 'GET /wp-json/tradebakerz/wc/v1/auth/me [Auth]',
+                changePassword: 'PUT /wp-json/tradebakerz/wc/v1/auth/change-password [Auth]',
+                forgotPassword: 'POST /wp-json/tradebakerz/wc/v1/auth/forgot-password',
+                resetPassword: 'PUT /wp-json/tradebakerz/wc/v1/auth/reset-password/:token',
+                verifyEmail: 'POST /wp-json/tradebakerz/wc/v1/auth/verify-email/:token',
+                resendVerification: 'POST /wp-json/tradebakerz/wc/v1/auth/resend-verification [Auth]'
+            },
+            products: {
+                list: 'GET /wp-json/wc/v3/products',
+                single: 'GET /wp-json/wc/v3/products/:id',
+                create: 'POST /wp-json/wc/v3/products [Admin]',
+                update: 'PUT /wp-json/wc/v3/products/:id [Admin]',
+                delete: 'DELETE /wp-json/wc/v3/products/:id [Admin]'
+            },
+            categories: {
+                list: 'GET /wp-json/wc/v3/products/categories',
+                single: 'GET /wp-json/wc/v3/products/categories/:id',
+                create: 'POST /wp-json/wc/v3/products/categories [Admin]',
+                update: 'PUT /wp-json/wc/v3/products/categories/:id [Admin]',
+                delete: 'DELETE /wp-json/wc/v3/products/categories/:id [Admin]'
+            },
+            cart: {
+                get: 'GET /wp-json/wc/v3/cart [Auth]',
+                add: 'POST /wp-json/wc/v3/cart/add [Auth]',
+                update: 'POST /wp-json/wc/v3/cart/update-item [Auth]',
+                remove: 'POST /wp-json/wc/v3/cart/remove-item [Auth]',
+                clear: 'POST /wp-json/wc/v3/cart/clear [Auth]'
+            },
+            orders: {
+                create: 'POST /wp-json/wc/v3/orders [Auth]',
+                list: 'GET /wp-json/wc/v3/orders [Auth]',
+                single: 'GET /wp-json/wc/v3/orders/:id [Auth]',
+                update: 'PUT /wp-json/wc/v3/orders/:id [Admin]',
+                delete: 'DELETE /wp-json/wc/v3/orders/:id [Admin]'
+            },
+            customers: {
+                get: 'GET /wp-json/wc/v3/customers/:id [Auth]',
+                update: 'PUT /wp-json/wc/v3/customers/:id [Auth]'
+            },
+            wishlist: {
+                get: 'GET /wp-json/tradebakerz/wc/v1/wishlist [Auth]',
+                add: 'POST /wp-json/tradebakerz/wc/v1/wishlist/add [Auth]',
+                remove: 'DELETE /wp-json/tradebakerz/wc/v1/wishlist/:product_id [Auth]'
+            },
+            reviews: {
+                list: 'GET /wp-json/wc/v3/products/reviews',
+                create: 'POST /wp-json/wc/v3/products/reviews [Auth]'
+            },
+            search: {
+                global: 'GET /wp-json/tradebakerz/wc/v1/search'
+            },
+            settings: {
+                get: 'GET /wp-json/tradebakerz/wc/v1/settings [Auth]',
+                update: 'PUT /wp-json/tradebakerz/wc/v1/settings [Auth]',
+                notifications: 'GET /wp-json/tradebakerz/wc/v1/notifications [Auth]',
+                addresses: 'GET /wp-json/tradebakerz/wc/v1/addresses [Auth]',
+                addAddress: 'POST /wp-json/tradebakerz/wc/v1/addresses [Auth]'
+            },
+            admin: {
+                dashboard: 'GET /wp-json/tradebakerz/wc/v1/admin/dashboard [Admin]',
+                users: 'GET /wp-json/tradebakerz/wc/v1/admin/users [Admin]',
+                salesReport: 'GET /wp-json/tradebakerz/wc/v1/admin/reports/sales [Admin]',
+                productsReport: 'GET /wp-json/tradebakerz/wc/v1/admin/reports/products [Admin]'
+            }
+        },
+        stats: {
+            totalEndpoints: '50+',
+            routeModules: 15,
+            features: [
+                'JWT Authentication',
+                'Password Reset',
+                'Email Verification',
+                'Product Management',
+                'Cart & Checkout',
+                'Order Processing',
+                'Wishlist',
+                'Reviews & Ratings',
+                'Coupons & Discounts',
+                'Admin Dashboard',
+                'User Settings',
+                'Notifications'
+            ]
+        }
+    });
+});
+
+// Welcome route at root
 app.get('/', (req, res) => {
     res.json({
         message: 'E-Commerce API - Complete Backend Solution',
