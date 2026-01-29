@@ -6,13 +6,13 @@ const connectDB = async () => {
             // Remove deprecated options
             // useNewUrlParser: true,  // No longer needed
             // useUnifiedTopology: true, // No longer needed
+            // bufferMaxEntries: 0,      // Deprecated in Mongoose 6+
+            // bufferCommands: false,    // Deprecated in Mongoose 6+
 
             // Add timeout and connection pooling options
             serverSelectionTimeoutMS: 30000, // 30 seconds
             socketTimeoutMS: 45000, // 45 seconds
             connectTimeoutMS: 60000, // 60 seconds
-            bufferMaxEntries: 0, // Disable mongoose buffering
-            bufferCommands: false, // Disable mongoose buffering
 
             // Connection pool settings
             maxPoolSize: 10, // Maintain up to 10 socket connections
