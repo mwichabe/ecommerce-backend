@@ -3,6 +3,7 @@ const router = express.Router();
 const { body } = require('express-validator');
 const { validate } = require('../middleware/error');
 const { protect } = require('../middleware/auth');
+const { checkDatabaseHealth } = require('../middleware/dbHealth');
 const {
     login,
     register,
@@ -38,6 +39,7 @@ router.post('/jwt-auth/v1/token/refresh', protect, refreshToken);
 // @access  Public
 router.post(
     '/tradebakerz/wc/v1/register',
+    checkDatabaseHealth, // Add database health check
     [
         body('username')
             .notEmpty().withMessage('Username is required')

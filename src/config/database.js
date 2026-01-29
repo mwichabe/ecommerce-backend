@@ -3,8 +3,25 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+            // Remove deprecated options
+            // useNewUrlParser: true,  // No longer needed
+            // useUnifiedTopology: true, // No longer needed
+
+            // Add timeout and connection pooling options
+            serverSelectionTimeoutMS: 30000, // 30 seconds
+            socketTimeoutMS: 45000, // 45 seconds
+            connectTimeoutMS: 60000, // 60 seconds
+            bufferMaxEntries: 0, // Disable mongoose buffering
+            bufferCommands: false, // Disable mongoose buffering
+
+            // Connection pool settings
+            maxPoolSize: 10, // Maintain up to 10 socket connections
+            minPoolSize: 2, // Keep at least 2 socket connections
+            maxIdleTimeMS: 30000, // Close connections after 30s of inactivity
+
+            // Retry settings
+            retryWrites: true,
+            retryReads: true,
         });
 
         console.log(`MongoDB Connected: ${conn.connection.host}`);
@@ -12,10 +29,33 @@ const connectDB = async () => {
         // Handle connection events
         mongoose.connection.on('error', (err) => {
             console.error(`MongoDB connection error: ${err}`);
+            console.error('Error details:', {
+                message: err.message,
+                name: err.name,
+                code: err.code,
+                statusCode: err.statusCode
+            });
         });
 
         mongoose.connection.on('disconnected', () => {
             console.log('MongoDB disconnected');
+        });
+
+        mongoose.connection.on('connected', () => {
+            console.log('MongoDB connected successfully');
+        });
+
+        mongoose.connection.on('reconnected', () => {
+            console.log('MongoDB reconnected');
+        });
+
+        // Monitor connection state
+        mongoose.connection.on('connecting', () => {
+            console.log('MongoDB connecting...');
+        });
+
+        mongoose.connection.on('disconnecting', () => {
+            console.log('MongoDB disconnecting...');
         });
 
         // Graceful shutdown
